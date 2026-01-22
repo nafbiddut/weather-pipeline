@@ -1,4 +1,13 @@
-1. Download the files. 
+# 🌦️ Berlin Weather Data Pipeline
+
+![Dashboard Preview](dashboard_preview.png)
+
+## ⚡ How to Run
+
+1. **Download the files:**
+   ```bash
+   git clone [https://github.com/nafbiddut/weather-pipeline.git](https://github.com/nafbiddut/weather-pipeline.git)
+   cd weather-pipeline
 2. Install docker if not installed. 
 3. run this command: docker-compose up --build
 4. Verification(Optional): docker exec -it postgres-db psql -U admin -d warehouse -c "SELECT * FROM weather_log;"
