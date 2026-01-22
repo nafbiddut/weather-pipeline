@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  # 1. The Cloud Storage(minIO)
+  minio:
+    image: quay.io/minio/minio
+    container_name: minio-server
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: password
+    volumes:
+      - ./minio_data:/data
+    command: server /data --console-address ":9001"
+    networks:
+      - data-network
+
+  # 2. The Database
+  postgres:
+    image: postgres:15
+    container_name: postgres-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: warehouse
+    volumes:                    
+      - ./postgres_data:/var/lib/postgresql/data
+    networks:
+      - data-network
+
+  # 3. ETL
+  etl-job:
+    build: .  
+    container_name: weather-etl
+    depends_on:
+      - minio
+      - postgres
+    networks:
+      - data-network
+    command: python etl.py
+  
+  # 4. The Dashboard (Metabase)
+  metabase:
+    image: metabase/metabase
+    container_name: metabase
+    ports:
+      - "3000:3000"
+    networks:
+      - data-network
+    depends_on:
+      - postgres
+
+# private hallway
+networks:
+  data-network:
+    driver: bridge

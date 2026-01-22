@@ -1,0 +1,16 @@
+#Data
+minio_data/
+postgres_data/
+
+#Python
+__pycache__/
+*.pyc
+venv/
+.pytest_cache/
+
+#System
+.env
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
